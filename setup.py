@@ -49,6 +49,8 @@ setup(name='gcovr',
         ],
       packages=['gcovr'],
       keywords=['utility'],
-      scripts=scripts
+      entry_points={
+            "console_scripts": ["gcovr=gcovr:main"]
+        }
       )
 
