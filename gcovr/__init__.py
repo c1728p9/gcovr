@@ -493,6 +493,7 @@ def process_gcov_data(data_fname, covdata, source_fname, options):
         raise RuntimeError(
             'Fatal error parsing gcov file, line 1: \n\t"%s"' % line.rstrip()
         )
+    gcov_normname = os.path.normpath(segments[-1].strip())
     #
     # Find the source file
     #
@@ -504,21 +505,21 @@ def process_gcov_data(data_fname, covdata, source_fname, options):
     if source_fname is None:
         common_dir = os.path.commonprefix([data_fname, currdir])
         if sys.version_info >= (2, 6):
-            fname = aliases.unalias_path(os.path.join(common_dir, segments[-1].strip()))
+            fname = aliases.unalias_path(os.path.join(common_dir, gcov_normname))
         else:
-            fname = aliases.unalias_path(os.path.join(common_dir, segments[-1]).strip())
+            fname = aliases.unalias_path(os.path.join(common_dir, gcov_normname).strip())
     else:
         # 0. Try using the current working directory as the source directory
-        fname = os.path.join(currdir, segments[-1].strip())
+        fname = os.path.join(currdir, gcov_normname)
         if not os.path.exists(fname):
             # 1. Try using the path to common prefix with the root_dir as the source directory
-            fname = os.path.join(root_dir, segments[-1].strip())
+            fname = os.path.join(root_dir, gcov_normname)
             if not os.path.exists(fname):
                 # 2. Try using the starting directory as the source directory
-                fname = os.path.join(starting_dir, segments[-1].strip())
+                fname = os.path.join(starting_dir, gcov_normname)
                 if not os.path.exists(fname):
                     # 3. Try using the path to the gcda file as the source directory
-                    fname = os.path.join(os.path.dirname(source_fname), os.path.basename(segments[-1].strip()))
+                    fname = os.path.join(os.path.dirname(source_fname), os.path.basename(gcov_normname))
 
 
     if options.verbose:
